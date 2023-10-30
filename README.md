@@ -1,4 +1,4 @@
-# PestoLink-MircoPython
+# PestoLink-MicroPython
 *v1.0.0*
 
 PestoLink-MicroPython is a MicroPython script designed to run on an XRP robot. If you upload these three files to an XRP robot, and run "main.py", you can then open the web app [PestoLink-Online](https://github.com/AlfredoSystems/PestoLink-Online), connect to your robot with BLE, and send gamepad data to the robot.
