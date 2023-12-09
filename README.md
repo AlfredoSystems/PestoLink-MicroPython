@@ -6,6 +6,7 @@ PestoLink-MicroPython is a MicroPython script designed to run on an XRP robot. B
 You can drive using mobile or desktop. On desktop, you can drive with your keyboard or a gamepad (like an xbox controller or PS4 controller).
 
 ## XRP Robot Setup Guide ##
+0) note: if you are using version 1.0.1 of the [XRP code editor](https://xrpcode.wpi.edu/) or later, it is likely you can skip right to step 3 from here
 1) Your robot needs to use MicroPython version 1.21 or later
 	- If your MicroPython version is less than that, then follow [these instructions to update it](https://micropython.org/download/RPI_PICO_W/)
 1) If you updated to 1.21, then one of your XRP Kit's lib files will need a small tweak
