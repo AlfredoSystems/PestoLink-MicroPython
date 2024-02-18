@@ -71,6 +71,7 @@ def advertising_payload(limited_disc=False, br_edr=False, name=None, services=No
 
     return payload
 
+
 def decode_field(payload, adv_type):
     i = 0
     result = []
@@ -80,9 +81,11 @@ def decode_field(payload, adv_type):
         i += 1 + payload[i]
     return result
 
+
 def decode_name(payload):
     n = decode_field(payload, _ADV_TYPE_NAME)
     return str(n[0], "utf-8") if n else ""
+
 
 def decode_services(payload):
     services = []
@@ -94,8 +97,6 @@ def decode_services(payload):
         services.append(bluetooth.UUID(u))
     return services
 
-
-
 class PestoLinkAgent:
     def __init__(self, name):
         sliced_name = name[:8] #only use the first 8 characters in the name, otherwise code will crash
@@ -105,7 +106,7 @@ class PestoLinkAgent:
         ((self._handle_tx, self._handle_rx),) = self._ble.gatts_register_services((_UART_SERVICE,))
         self._connections = set()
         self._payload = advertising_payload(name=sliced_name, services=[_UART_UUID])
-        self._byte_list = None
+        self._byte_list = [1,127,127,127,127,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         self._advertise()
 
     def _irq(self, event, data):
@@ -138,13 +139,17 @@ class PestoLinkAgent:
         self._ble.gap_advertise(interval_us, adv_data=self._payload)
 
     def on_write(self, value):
-        self._byte_list = [byte for byte in value]
+        _raw_byte_list = [byte for byte in value]
+        if (_raw_byte_list[0] == 0x01):
+            self._byte_list = _raw_byte_list
+        else:
+            self._byte_list = [1,127,127,127,127,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         
     def get_raw_axis(self, axis_num):
         if axis_num < 0 or axis_num > 3 or self._byte_list == None:
             return 127
         else:
-            return self._byte_list[axis_num]
+            return self._byte_list[1 + axis_num]
 
     def get_axis(self, axis_num):
         raw_axis = self.get_raw_axis(axis_num)
@@ -157,8 +162,8 @@ class PestoLinkAgent:
         if self._byte_list == None:
             return False
         
-        raw_buttons = self._byte_list[4]
-        if ((raw_buttons >> (button_num)) & 01):
+        raw_buttons = (self._byte_list[6] << 8) + self._byte_list[5]
+        if ((raw_buttons >> (button_num)) & 0x01):
             return True
         else:
             return False
