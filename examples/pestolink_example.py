@@ -17,8 +17,8 @@ pestolink = PestoLinkAgent(robot_name)
 # Start an infinite loop
 while True:
     if pestolink.is_connected():  # Check if a BLE connection is established
-        throttle = -1 * pestolink.get_axis(0)
-        rotation = 1 * pestolink.get_axis(1)
+        rotation = -1 * pestolink.get_axis(0)
+        throttle = -1 * pestolink.get_axis(1)
         
         drivetrain.arcade(throttle, rotation)
         
