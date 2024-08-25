@@ -1,13 +1,13 @@
 # PestoLink-MicroPython
 *v1.0.0*
 
-PestoLink-MicroPython is a MicroPython script that runs on an XRP robot. By using the web app [PestoLink-Online](https://pestol.ink) you can connect to your robot with BLE (Bluetooth Low Energy) and drive the robot wirelessly.
+PestoLink-MicroPython is a MicroPython module that runs on an XRP robot. By using the web app [PestoLink-Online](https://pestol.ink) you can connect to your robot with BLE (Bluetooth Low Energy) and drive the robot wirelessly.
 
 You can drive using mobile or desktop. On desktop, you can drive with your keyboard or a gamepad (like an xbox controller or PS4 controller).
 
 ## XRP Robot Setup Guide ##
-1) Your robot needs to use MicroPython version 1.21 or later
-	- If your MicroPython version is less than that, then follow [these instructions to update it](https://micropython.org/download/RPI_PICO_W/)
+1) Your robot needs to use a recent verion of MicroPython. When you connect to an XRP board with with XRP web editor, the shell will tell you what version you have.
+	- If your MicroPython version is less than **1.21.0**, then follow [these instructions to update it](https://micropython.org/download/RPI_PICO_W/)
 
 1) Upload `pestolink.py` to your XRP robot
 	- [Click here](https://github.com/AlfredoSystems/PestoLink-MicroPython/archive/refs/heads/main.zip) to download this repository. After that, unzip it
