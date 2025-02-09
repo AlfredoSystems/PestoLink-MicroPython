@@ -16,7 +16,7 @@ _FLAG_NOTIFY = const(0x0010)
 
 _UART_UUID = bluetooth.UUID("27df26c5-83f4-4964-bae0-d7b7cb0a1f54")
 _UART_TX = (
-    bluetooth.UUID("6E400003-B5A3-F393-E0A9-E50E24DCCA9E"),
+    bluetooth.UUID("266d9d74-3e10-4fcd-88d2-cb63b5324d0c"),
     _FLAG_READ | _FLAG_NOTIFY,
 )
 _UART_RX = (
@@ -108,6 +108,7 @@ class PestoLinkAgent:
         self._payload = advertising_payload(name=sliced_name, services=[_UART_UUID])
         self._byte_list = [1,127,127,127,127,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
         self._advertise()
+        self.last_telemetry_ms = 0
 
     def _irq(self, event, data):
         # Track connections so we can send notifications.
@@ -167,3 +168,44 @@ class PestoLinkAgent:
             return True
         else:
             return False
+            
+    def telemetryPrint(self, telemetry, hex_code):
+        if self.last_telemetry_ms + 500 > time.ticks_ms():
+            return
+
+        result = bytearray(11)
+        
+        # Copy up to 8 characters from telemetry
+        for i in range(8):
+            if i < len(telemetry):
+                result[i] = ord(telemetry[i])
+            else:
+                result[i] = 0
+        
+        # Adjust pointer if the hex code starts with "0x"
+        if hex_code.startswith("0x"):
+            hex_code = hex_code[2:]
+        
+        try:
+            color = int(hex_code, 16)
+        except ValueError:
+            color = 0  # Default to 0 if conversion fails
+        
+        #debug: print(str(hex_code) + " " + str(color))
+        
+        result[8] = (color >> 16) & 0xFF
+        result[9] = (color >> 8) & 0xFF
+        result[10] = color & 0xFF
+        
+        self.send(result)  # Assuming BLE characteristic write
+        self.last_telemetry_ms = time.ticks_ms()
+        
+    def telemetryPrintBatteryVoltage(self, battery_voltage):
+        voltage_string = "{:.2f} V".format(battery_voltage)
+        
+        if battery_voltage >= 7.6:
+            self.telemetryPrint(voltage_string, "00FF00")
+        elif battery_voltage >= 7:
+            self.telemetryPrint(voltage_string, "FFFF00")
+        else:
+            self.telemetryPrint(voltage_string, "FF0000")

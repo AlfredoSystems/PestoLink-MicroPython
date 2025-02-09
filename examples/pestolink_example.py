@@ -26,6 +26,9 @@ while True:
             servo_one.set_angle(110)
         else:
             servo_one.set_angle(90)
+        
+        batteryVoltage = (ADC(Pin(28)).read_u16())/(1024*64/14)
+        pestolink.telemetryPrintBatteryVoltage(batteryVoltage)
 
     else: #default behavior when no BLE connection is open
         drivetrain.arcade(0, 0)
