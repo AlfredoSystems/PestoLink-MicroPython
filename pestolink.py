@@ -119,7 +119,7 @@ class PestoLinkAgent:
         elif event == _IRQ_CENTRAL_DISCONNECT:
             conn_handle, _, _ = data
             #print("Disconnected")
-            self._connections.remove(conn_handle)
+            self._connections.discard(conn_handle)
             # Start advertising again to allow a new connection.
             self._advertise()
         elif event == _IRQ_GATTS_WRITE:

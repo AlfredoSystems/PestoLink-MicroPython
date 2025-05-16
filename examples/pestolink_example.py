@@ -1,5 +1,5 @@
 # Import necessary modules
-from machine import Pin 
+from machine import Pin, ADC
 import bluetooth
 import time
 import math
@@ -27,7 +27,7 @@ while True:
         else:
             servo_one.set_angle(90)
         
-        batteryVoltage = (ADC(Pin(28)).read_u16())/(1024*64/14)
+        batteryVoltage = (ADC(Pin("BOARD_VIN_MEASURE")).read_u16())/(1024*64/14)
         pestolink.telemetryPrintBatteryVoltage(batteryVoltage)
 
     else: #default behavior when no BLE connection is open
